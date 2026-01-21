@@ -89,7 +89,8 @@ function executeClaude(requirements) {
       '-p', requirements,
       '--allowedTools', 'Read,Write,Edit,Bash',
       '--permission-mode', 'dontAsk',
-      '--output-format', 'stream-json'
+      '--output-format', 'stream-json',
+      '--verbose'
     ];
 
     const claude = spawn('claude', args, {
