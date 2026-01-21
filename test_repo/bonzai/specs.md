@@ -3,6 +3,5 @@
 Define your cleanup requirements below. btrim will follow these instructions.
 
 ## Example:
-- Remove unused imports
-- Delete files matching pattern "*.tmp"
-- Clean up console.log statements
+- Keep all folders under 20 files
+- Keep all files under 100 lines

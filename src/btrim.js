@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { execSync } from 'child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import fs from 'fs';
 import { join } from 'path';
 
 const BONZAI_DIR = 'bonzai';
@@ -16,17 +16,37 @@ Define your cleanup requirements below. btrim will follow these instructions.
 - Clean up console.log statements
 `;
 
+function initializeBonzai() {
+  const bonzaiPath = join(process.cwd(), BONZAI_DIR);
+  const specsPath = join(bonzaiPath, SPECS_FILE);
+
+  // Check if bonzai/ folder exists
+  if (!fs.existsSync(bonzaiPath)) {
+    // Create bonzai/ folder
+    fs.mkdirSync(bonzaiPath, { recursive: true });
+    console.log(`📁 Created ${BONZAI_DIR}/ folder`);
+  }
+
+  // Generate bonzai/specs.md with template
+  if (!fs.existsSync(specsPath)) {
+    fs.writeFileSync(specsPath, DEFAULT_SPECS);
+    console.log(`📝 Created ${BONZAI_DIR}/${SPECS_FILE}`);
+    console.log(`\n⚠️  Please edit ${BONZAI_DIR}/${SPECS_FILE} to define your cleanup rules before running btrim.\n`);
+    process.exit(0);
+  }
+}
+
 function ensureBonzaiDir() {
   const bonzaiPath = join(process.cwd(), BONZAI_DIR);
   const specsPath = join(bonzaiPath, SPECS_FILE);
 
-  if (!existsSync(bonzaiPath)) {
-    mkdirSync(bonzaiPath, { recursive: true });
+  if (!fs.existsSync(bonzaiPath)) {
+    fs.mkdirSync(bonzaiPath, { recursive: true });
     console.log(`📁 Created ${BONZAI_DIR}/ folder\n`);
   }
 
-  if (!existsSync(specsPath)) {
-    writeFileSync(specsPath, DEFAULT_SPECS);
+  if (!fs.existsSync(specsPath)) {
+    fs.writeFileSync(specsPath, DEFAULT_SPECS);
     console.log(`📝 Created ${BONZAI_DIR}/${SPECS_FILE} - edit this file to define your cleanup specs\n`);
   }
 
@@ -34,7 +54,7 @@ function ensureBonzaiDir() {
 }
 
 function loadSpecs(specsPath) {
-  const content = readFileSync(specsPath, 'utf-8');
+  const content = fs.readFileSync(specsPath, 'utf-8');
   return `You are a code cleanup assistant. Follow these specifications:\n\n${content}`;
 }
 
@@ -46,21 +66,41 @@ function execVisible(command) {
   execSync(command, { stdio: 'inherit' });
 }
 
+function executeClaude(requirements) {
+  try {
+    // Check if Claude CLI exists
+    try {
+      execSync('which claude', { encoding: 'utf-8', stdio: 'pipe' });
+    } catch (error) {
+      throw new Error(
+        'Claude Code CLI not found.\n' +
+        'Install it with: npm install -g @anthropic-ai/claude-code'
+      );
+    }
+
+    // Execute Claude with requirements
+    const command = `claude -p "${requirements.replace(/"/g, '\\"')}" --allowedTools "Read,Write,Edit,Bash" --permission-mode dontAsk`;
+    const result = execSync(command, { stdio: 'inherit', encoding: 'utf-8' });
+    return result;
+  } catch (error) {
+    if (error.message.includes('Claude Code CLI not found')) {
+      throw error;
+    }
+    throw new Error(`Failed to execute Claude: ${error.message}`);
+  }
+}
+
 async function burn() {
   try {
+    // Initialize bonzai folder and specs.md on first execution
+    initializeBonzai();
+    
     // Ensure bonzai directory and specs file exist
     const specsPath = ensureBonzaiDir();
     const specs = loadSpecs(specsPath);
 
-    // Check if Claude CLI exists
+    // Check if Claude CLI exists and execute
     console.log('🔍 Checking for Claude Code CLI...');
-    try {
-      exec('which claude');
-    } catch {
-      console.error('❌ Claude Code CLI not found');
-      console.error('Install: npm install -g @anthropic-ai/claude-code');
-      process.exit(1);
-    }
 
     // Check if in git repo
     try {
@@ -114,7 +154,7 @@ async function burn() {
     const startTime = Date.now();
 
     // Execute Claude with specs from bonzai/specs.md
-    execVisible(`claude -p "${specs.replace(/"/g, '\\"')}" --allowedTools "Read,Write,Edit,Bash" --permission-mode dontAsk`);
+    executeClaude(specs);
 
     const duration = Math.round((Date.now() - startTime) / 1000);
 
@@ -135,6 +175,9 @@ async function burn() {
 
   } catch (error) {
     console.error('❌ Burn failed:', error.message);
+    if (error.message.includes('Claude Code CLI not found')) {
+      console.error('\n' + error.message);
+    }
     process.exit(1);
   }
 }
