@@ -2,4 +2,5 @@
 
 Define your cleanup requirements below. btrim will follow these instructions.
 
-- remove any files of "removeme.ts"
+## Requirmements:
+- Remove all python files from repo 
