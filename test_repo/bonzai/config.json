@@ -1,6 +1,6 @@
 {
   "provider": "cursor",
-  "headless": false,
+  "debugMode": true,
   "autoBurn": false,
   "autoRun": false,
   "lineLimit": {

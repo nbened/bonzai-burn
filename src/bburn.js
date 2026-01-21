@@ -99,7 +99,7 @@ function loadConfig(configPath) {
     const content = fs.readFileSync(configPath, 'utf-8');
     return JSON.parse(content);
   } catch {
-    return { headless: true };
+    return { debugMode: false };
   }
 }
 
@@ -148,11 +148,11 @@ function executeClaude(requirements, config) {
     );
   }
 
-  const headless = config.headless !== false;
+  const debugMode = config.debugMode === true || config.debugMode === 'true';
 
-  // Non-headless mode: run Claude interactively
-  if (!headless) {
-    console.log('🖥️  Running in interactive mode...\n');
+  // Debug mode: run Claude with visible output
+  if (debugMode) {
+    console.log('🐛 Running in debug mode...\n');
     return new Promise((resolve, reject) => {
       const args = [
         '-p', requirements,
@@ -292,13 +292,13 @@ function executeCursor(requirements, config) {
     );
   }
 
-  const headless = config.headless !== false;
+  const debugMode = config.debugMode === true || config.debugMode === 'true';
 
-  // Non-headless mode: run cursor-agent interactively
-  if (!headless) {
-    console.log('🖥️  Running in interactive mode...\n');
+  // Debug mode: run cursor-agent with verbose output
+  if (debugMode) {
+    console.log('🐛 Running in debug mode...\n');
     return new Promise((resolve, reject) => {
-      const args = ['-p', requirements];
+      const args = ['-p', requirements, '--verbose'];
 
       const cursor = spawn('cursor-agent', args, {
         stdio: 'inherit'
@@ -458,7 +458,7 @@ async function burn() {
 
     console.log(`📋 Specs loaded from: ${BONZAI_DIR}/${SPECS_FILE}`);
     console.log(`🤖 Provider: ${provider}`);
-    console.log(`⚙️  Headless mode: ${config.headless !== false ? 'on' : 'off'}`);
+    console.log(`🐛 Debug mode: ${config.debugMode === true || config.debugMode === 'true' ? 'on' : 'off'}`);
     console.log('🔥 Running Bonzai burn...\n');
 
     const startTime = Date.now();
