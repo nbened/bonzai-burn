@@ -8,7 +8,9 @@
     "bonzai-burn": "./src/index.js",
     "bburn": "./src/bburn.js",
     "baccept": "./src/baccept.js",
-    "brevert": "./src/brevert.js"
+    "brevert": "./src/brevert.js",
+    "bgraph": "./src/bgraph.js",
+    "bonzai-mcp": "./src/mcp-server.js"
   },
   "keywords": [
     "git",
@@ -22,5 +24,8 @@
   "files": [
     "src",
     "payload-bonzai"
-  ]
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.3"
+  }
 }

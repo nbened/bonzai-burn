@@ -4,7 +4,7 @@
   "autoBurn": false,
   "autoRun": false,
   "lineLimit": {
-    "enabled": false,
+    "enabled": true,
     "limit": 50,
     "prompt": "Split any file with over {{ linelimit }} lines into smaller files."
   },
