@@ -1,10 +1,42 @@
 #!/usr/bin/env node
 import { execSync } from 'child_process';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { join } from 'path';
 
-const CLEANUP_REQUIREMENTS = `
-You are a code cleanup assistant. Please:
-- find any jsx file called "removeme" and remove it
+const BONZAI_DIR = 'bonzai';
+const SPECS_FILE = 'specs.md';
+
+const DEFAULT_SPECS = `# Bonzai Specs
+
+Define your cleanup requirements below. btrim will follow these instructions.
+
+## Example:
+- Remove unused imports
+- Delete files matching pattern "*.tmp"
+- Clean up console.log statements
 `;
+
+function ensureBonzaiDir(): string {
+  const bonzaiPath = join(process.cwd(), BONZAI_DIR);
+  const specsPath = join(bonzaiPath, SPECS_FILE);
+
+  if (!existsSync(bonzaiPath)) {
+    mkdirSync(bonzaiPath, { recursive: true });
+    console.log(`📁 Created ${BONZAI_DIR}/ folder\n`);
+  }
+
+  if (!existsSync(specsPath)) {
+    writeFileSync(specsPath, DEFAULT_SPECS);
+    console.log(`📝 Created ${BONZAI_DIR}/${SPECS_FILE} - edit this file to define your cleanup specs\n`);
+  }
+
+  return specsPath;
+}
+
+function loadSpecs(specsPath: string): string {
+  const content = readFileSync(specsPath, 'utf-8');
+  return `You are a code cleanup assistant. Follow these specifications:\n\n${content}`;
+}
 
 function exec(command: string): string {
   return execSync(command, { encoding: 'utf-8', stdio: 'pipe' }).trim();
@@ -16,6 +48,10 @@ function execVisible(command: string): void {
 
 async function burn() {
   try {
+    // Ensure bonzai directory and specs file exist
+    const specsPath = ensureBonzaiDir();
+    const specs = loadSpecs(specsPath);
+
     // Check if Claude CLI exists
     console.log('🔍 Checking for Claude Code CLI...');
     try {
@@ -72,12 +108,13 @@ async function burn() {
     exec(`git config bonzai.burnBranch ${burnBranch}`);
     exec(`git config bonzai.madeWipCommit ${madeWipCommit}`);
 
+    console.log(`📋 Specs loaded from: ${BONZAI_DIR}/${SPECS_FILE}`);
     console.log('🔥 Running Bonzai burn...\n');
 
     const startTime = Date.now();
 
-    // Execute Claude
-    execVisible(`claude -p "${CLEANUP_REQUIREMENTS}" --allowedTools "Read,Write,Edit,Bash" --permission-mode dontAsk`);
+    // Execute Claude with specs from bonzai/specs.md
+    execVisible(`claude -p "${specs.replace(/"/g, '\\"')}" --allowedTools "Read,Write,Edit,Bash" --permission-mode dontAsk`);
 
     const duration = Math.round((Date.now() - startTime) / 1000);
 

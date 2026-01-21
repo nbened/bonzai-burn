@@ -1,6 +1,6 @@
 {
   "name": "bonzai-burn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Git branch-based cleanup tool with btrim and brevert commands",
   "main": "dist/index.js",
   "bin": {
@@ -10,7 +10,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "postinstall": "node dist/postinstall.js"
   },
   "keywords": [
     "git",
