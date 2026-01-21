@@ -99,7 +99,7 @@ function loadConfig(configPath) {
     const content = fs.readFileSync(configPath, 'utf-8');
     return JSON.parse(content);
   } catch {
-    return { headlessClaude: true };
+    return { headless: true };
   }
 }
 
@@ -148,7 +148,7 @@ function executeClaude(requirements, config) {
     );
   }
 
-  const headless = config.headlessClaude !== false;
+  const headless = config.headless !== false;
 
   // Non-headless mode: run Claude interactively
   if (!headless) {
@@ -282,8 +282,126 @@ function getToolIcon(toolName) {
 }
 
 function executeCursor(requirements, config) {
-  console.log('🔥 Burning through Cursor...');
-  return Promise.resolve();
+  // Check if cursor-agent CLI exists
+  try {
+    execSync('which cursor-agent', { encoding: 'utf-8', stdio: 'pipe' });
+  } catch (error) {
+    throw new Error(
+      'cursor-agent CLI not found.\n' +
+      'Install it with: npm install -g cursor-agent'
+    );
+  }
+
+  const headless = config.headless !== false;
+
+  // Non-headless mode: run cursor-agent interactively
+  if (!headless) {
+    console.log('🖥️  Running in interactive mode...\n');
+    return new Promise((resolve, reject) => {
+      const args = ['-p', requirements];
+
+      const cursor = spawn('cursor-agent', args, {
+        stdio: 'inherit'
+      });
+
+      cursor.on('close', (code) => {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject(new Error(`cursor-agent exited with code ${code}`));
+        }
+      });
+
+      cursor.on('error', (err) => {
+        reject(new Error(`Failed to execute cursor-agent: ${err.message}`));
+      });
+    });
+  }
+
+  // Headless mode with token tracking
+  let totalInputTokens = 0;
+  let totalOutputTokens = 0;
+  let lastToolName = '';
+
+  return new Promise((resolve, reject) => {
+    const args = [
+      '-p', requirements,
+      '--output-format', 'stream-json'
+    ];
+
+    const cursor = spawn('cursor-agent', args, {
+      stdio: ['inherit', 'pipe', 'pipe']
+    });
+
+    let buffer = '';
+
+    cursor.stdout.on('data', (data) => {
+      buffer += data.toString();
+
+      // Process complete JSON lines
+      const lines = buffer.split('\n');
+      buffer = lines.pop(); // Keep incomplete line in buffer
+
+      for (const line of lines) {
+        if (!line.trim()) continue;
+
+        try {
+          const event = JSON.parse(line);
+
+          // Track tokens from assistant messages
+          if (event.type === 'assistant' && event.message?.usage) {
+            const usage = event.message.usage;
+            if (usage.input_tokens) totalInputTokens += usage.input_tokens;
+            if (usage.output_tokens) totalOutputTokens += usage.output_tokens;
+          }
+
+          // Show tool usage updates
+          if (event.type === 'content_block_start' && event.content_block?.type === 'tool_use') {
+            lastToolName = event.content_block.name || '';
+          }
+
+          if (event.type === 'content_block_stop' && lastToolName) {
+            const icon = getToolIcon(lastToolName);
+            console.log(`  ${icon} ${lastToolName}`);
+            lastToolName = '';
+          }
+
+          // Show result events with usage info
+          if (event.type === 'result') {
+            if (event.usage) {
+              totalInputTokens = event.usage.input_tokens || totalInputTokens;
+              totalOutputTokens = event.usage.output_tokens || totalOutputTokens;
+            }
+          }
+
+        } catch (e) {
+          // Not valid JSON, skip
+        }
+      }
+    });
+
+    cursor.stderr.on('data', (data) => {
+      const msg = data.toString().trim();
+      if (msg && !msg.includes('ExperimentalWarning')) {
+        console.error(msg);
+      }
+    });
+
+    cursor.on('close', (code) => {
+      // Print token summary
+      console.log(`\n📊 Tokens: ${totalInputTokens.toLocaleString()} in / ${totalOutputTokens.toLocaleString()} out`);
+
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`cursor-agent exited with code ${code}`));
+      }
+    });
+
+    cursor.on('error', (err) => {
+      reject(new Error(`Failed to execute cursor-agent: ${err.message}`));
+    });
+  });
 }
 
 async function burn() {
@@ -340,9 +458,7 @@ async function burn() {
 
     console.log(`📋 Specs loaded from: ${BONZAI_DIR}/${SPECS_FILE}`);
     console.log(`🤖 Provider: ${provider}`);
-    if (provider === 'claude') {
-      console.log(`⚙️  Headless mode: ${config.headlessClaude !== false ? 'on' : 'off'}`);
-    }
+    console.log(`⚙️  Headless mode: ${config.headless !== false ? 'on' : 'off'}`);
     console.log('🔥 Running Bonzai burn...\n');
 
     const startTime = Date.now();
