@@ -16,7 +16,7 @@ Define your cleanup requirements below. btrim will follow these instructions.
 - Clean up console.log statements
 `;
 
-function ensureBonzaiDir(): string {
+function ensureBonzaiDir() {
   const bonzaiPath = join(process.cwd(), BONZAI_DIR);
   const specsPath = join(bonzaiPath, SPECS_FILE);
 
@@ -33,16 +33,16 @@ function ensureBonzaiDir(): string {
   return specsPath;
 }
 
-function loadSpecs(specsPath: string): string {
+function loadSpecs(specsPath) {
   const content = readFileSync(specsPath, 'utf-8');
   return `You are a code cleanup assistant. Follow these specifications:\n\n${content}`;
 }
 
-function exec(command: string): string {
+function exec(command) {
   return execSync(command, { encoding: 'utf-8', stdio: 'pipe' }).trim();
 }
 
-function execVisible(command: string): void {
+function execVisible(command) {
   execSync(command, { stdio: 'inherit' });
 }
 
@@ -133,7 +133,7 @@ async function burn() {
     console.log(`\n✓ Keep changes: git checkout ${originalBranch} && git merge ${burnBranch}`);
     console.log(`✗ Discard: brevert\n`);
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('❌ Burn failed:', error.message);
     process.exit(1);
   }

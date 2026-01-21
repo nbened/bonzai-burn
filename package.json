@@ -1,16 +1,13 @@
 {
   "name": "bonzai-burn",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Git branch-based cleanup tool with btrim and brevert commands",
-  "main": "dist/index.js",
+  "type": "module",
+  "main": "src/index.js",
   "bin": {
-    "bonzai-burn": "./dist/index.js",
-    "btrim": "./dist/btrim.js",
-    "brevert": "./dist/brevert.js"
-  },
-  "scripts": {
-    "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "bonzai-burn": "./src/index.js",
+    "btrim": "./src/btrim.js",
+    "brevert": "./src/brevert.js"
   },
   "keywords": [
     "git",
@@ -18,14 +15,10 @@
     "cli"
   ],
   "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0"
-  },
   "engines": {
     "node": ">=16.0.0"
   },
   "files": [
-    "dist"
+    "src"
   ]
 }

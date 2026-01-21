@@ -2,4 +2,7 @@
 
 Define your cleanup requirements below. btrim will follow these instructions.
 
-- remove any files of "removeme.ts"
+## Example:
+- Remove unused imports
+- Delete files matching pattern "*.tmp"
+- Clean up console.log statements

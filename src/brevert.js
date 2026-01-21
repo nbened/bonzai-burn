@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 import { execSync } from 'child_process';
 
-function exec(command: string): string {
+function exec(command) {
   return execSync(command, { encoding: 'utf-8', stdio: 'pipe' }).trim();
 }
 
-function execVisible(command: string): void {
+function execVisible(command) {
   execSync(command, { stdio: 'inherit' });
 }
 
 async function revert() {
   try {
     // Get saved metadata
-    let originalBranch: string;
-    let burnBranch: string;
-    let madeWipCommit: boolean;
+    let originalBranch;
+    let burnBranch;
+    let madeWipCommit;
 
     try {
       originalBranch = exec('git config bonzai.originalBranch');
@@ -50,7 +50,7 @@ async function revert() {
     console.log(`✓ Burn fully reverted`);
     console.log(`Back on: ${originalBranch}\n`);
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('❌ Revert failed:', error.message);
     process.exit(1);
   }
