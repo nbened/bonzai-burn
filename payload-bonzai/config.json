@@ -1,6 +1,14 @@
 {
   "headlessClaude": true,
   "autoBurn": false,
-  "lineLimit": 70,
-  "folderLimit": 10
+  "lineLimit": {
+    "enabled": true,
+    "limit": 70,
+    "prompt": "Split any file with over {{ linelimit }} lines into smaller files."
+  },
+  "folderLimit": {
+    "enabled": true,
+    "limit": 10,
+    "prompt": "Split any folder with over {{ folderlimit }} items into smaller, compartmentalized folders."
+  }
 }

@@ -73,8 +73,29 @@ function loadConfig(configPath) {
   }
 }
 
-function loadSpecs(specsPath) {
-  const content = fs.readFileSync(specsPath, 'utf-8');
+function loadSpecs(specsPath, config) {
+  let content = fs.readFileSync(specsPath, 'utf-8');
+
+  // Process lineLimit if enabled
+  if (config.lineLimit?.enabled) {
+    content = content.replace(/\{\{\s*linelimit\s*\}\}/gi, config.lineLimit.limit);
+  } else {
+    // Remove lines containing {{ linelimit }} if disabled
+    content = content.split('\n')
+      .filter(line => !/\{\{\s*linelimit\s*\}\}/i.test(line))
+      .join('\n');
+  }
+
+  // Process folderLimit if enabled
+  if (config.folderLimit?.enabled) {
+    content = content.replace(/\{\{\s*folderlimit\s*\}\}/gi, config.folderLimit.limit);
+  } else {
+    // Remove lines containing {{ folderlimit }} if disabled
+    content = content.split('\n')
+      .filter(line => !/\{\{\s*folderlimit\s*\}\}/i.test(line))
+      .join('\n');
+  }
+
   return `You are a code cleanup assistant. Follow these specifications:\n\n${content}`;
 }
 
@@ -236,8 +257,8 @@ async function burn() {
 
     // Ensure bonzai directory and specs file exist
     const { specsPath, configPath } = ensureBonzaiDir();
-    const specs = loadSpecs(specsPath);
     const config = loadConfig(configPath);
+    const specs = loadSpecs(specsPath, config);
 
     // Check if Claude CLI exists and execute
     console.log('🔍 Checking for Claude Code CLI...');
