@@ -1,6 +1,6 @@
 {
   "provider": "cursor",
-  "headless": true,
+  "headless": false,
   "autoBurn": false,
   "autoRun": false,
   "lineLimit": {
