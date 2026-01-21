@@ -15,28 +15,6 @@ const CONFIG_FILE = 'config.json';
 // Template folder in the package
 const TEMPLATE_DIR = join(__dirname, '..', 'bonzai');
 
-function getTemplate(filename) {
-  const templatePath = join(TEMPLATE_DIR, filename);
-  if (fs.existsSync(templatePath)) {
-    return fs.readFileSync(templatePath, 'utf-8');
-  }
-  return null;
-}
-
-const DEFAULT_SPECS = `# Bonzai Specs
-
-Define your cleanup requirements below. btrim will follow these instructions.
-
-## Requirements:
-- Remove unused imports
-- Delete files matching pattern "*.tmp"
-- Clean up console.log statements
-`;
-
-const DEFAULT_CONFIG = {
-  headlessClaude: true
-};
-
 function initializeBonzai() {
   const bonzaiPath = join(process.cwd(), BONZAI_DIR);
   const specsPath = join(bonzaiPath, SPECS_FILE);
@@ -44,22 +22,19 @@ function initializeBonzai() {
 
   // Check if bonzai/ folder exists
   if (!fs.existsSync(bonzaiPath)) {
-    // Create bonzai/ folder
     fs.mkdirSync(bonzaiPath, { recursive: true });
     console.log(`📁 Created ${BONZAI_DIR}/ folder`);
   }
 
-  // Generate bonzai/specs.md from package template
+  // Copy specs.md from package template
   if (!fs.existsSync(specsPath)) {
-    const specsContent = getTemplate(SPECS_FILE) || DEFAULT_SPECS;
-    fs.writeFileSync(specsPath, specsContent);
+    fs.copyFileSync(join(TEMPLATE_DIR, SPECS_FILE), specsPath);
     console.log(`📝 Created ${BONZAI_DIR}/${SPECS_FILE}`);
   }
 
-  // Generate bonzai/config.json from package template
+  // Copy config.json from package template
   if (!fs.existsSync(configPath)) {
-    const configContent = getTemplate(CONFIG_FILE) || JSON.stringify(DEFAULT_CONFIG, null, 2) + '\n';
-    fs.writeFileSync(configPath, configContent);
+    fs.copyFileSync(join(TEMPLATE_DIR, CONFIG_FILE), configPath);
     console.log(`⚙️  Created ${BONZAI_DIR}/${CONFIG_FILE}`);
     console.log(`\n⚠️  Please edit ${BONZAI_DIR}/${SPECS_FILE} to define your cleanup rules before running btrim.\n`);
     process.exit(0);
@@ -77,14 +52,12 @@ function ensureBonzaiDir() {
   }
 
   if (!fs.existsSync(specsPath)) {
-    const specsContent = getTemplate(SPECS_FILE) || DEFAULT_SPECS;
-    fs.writeFileSync(specsPath, specsContent);
+    fs.copyFileSync(join(TEMPLATE_DIR, SPECS_FILE), specsPath);
     console.log(`📝 Created ${BONZAI_DIR}/${SPECS_FILE} - edit this file to define your cleanup specs\n`);
   }
 
   if (!fs.existsSync(configPath)) {
-    const configContent = getTemplate(CONFIG_FILE) || JSON.stringify(DEFAULT_CONFIG, null, 2) + '\n';
-    fs.writeFileSync(configPath, configContent);
+    fs.copyFileSync(join(TEMPLATE_DIR, CONFIG_FILE), configPath);
     console.log(`⚙️  Created ${BONZAI_DIR}/${CONFIG_FILE}\n`);
   }
 
@@ -94,9 +67,9 @@ function ensureBonzaiDir() {
 function loadConfig(configPath) {
   try {
     const content = fs.readFileSync(configPath, 'utf-8');
-    return { ...DEFAULT_CONFIG, ...JSON.parse(content) };
+    return JSON.parse(content);
   } catch {
-    return DEFAULT_CONFIG;
+    return { headlessClaude: true };
   }
 }
 

@@ -1,3 +1,4 @@
 {
-  "headlessClaude": true
+  "headlessClaude": true,
+  "autoModeration": false
 }
