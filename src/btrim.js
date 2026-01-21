@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { execSync, spawn } from 'child_process';
+import crypto from 'crypto';
 import fs from 'fs';
 import { join } from 'path';
 
@@ -218,16 +219,9 @@ async function burn() {
       console.log(`✓ Work saved on ${originalBranch}\n`);
     }
 
-    // Always use same burn branch name
-    const burnBranch = 'bonzai-burn';
-
-    // Delete existing burn branch if it exists
-    try {
-      exec(`git branch -D ${burnBranch}`);
-      console.log(`🧹 Cleaned up old ${burnBranch} branch\n`);
-    } catch {
-      // Branch doesn't exist, that's fine
-    }
+    // Generate unique branch name with short UUID
+    const shortId = crypto.randomUUID().slice(0, 8);
+    const burnBranch = `bonzai-burn-${shortId}`;
 
     console.log(`📍 Starting from: ${originalBranch}`);
     console.log(`🌿 Creating: ${burnBranch}\n`);
