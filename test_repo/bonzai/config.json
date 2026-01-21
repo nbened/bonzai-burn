@@ -1,7 +1,7 @@
 {
   "isClaude": false,
   "isCursor": true,
-  "headlessClaude": true,
+  "headlessClaude": false,
   "autoBurn": false,
   "lineLimit": {
     "enabled": true,
