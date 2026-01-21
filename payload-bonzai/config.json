@@ -1,6 +1,5 @@
 {
-  "isClaude": false,
-  "isCursor": true,
+  "provider": "cursor",
   "headlessClaude": true,
   "autoBurn": false,
   "lineLimit": {

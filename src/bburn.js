@@ -15,10 +15,10 @@ const CONFIG_FILE = 'config.json';
 // Template folder in the package (ships as payload-bonzai, copied as bonzai)
 const TEMPLATE_DIR = join(__dirname, '..', 'payload-bonzai');
 
-// Parse --provider / -p argument
-function parseProvider() {
+// Parse --provider / -p argument, with config as fallback
+function parseProvider(configDefault = 'claude') {
   const args = process.argv.slice(2);
-  let provider = 'claude'; // default
+  let provider = null;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--provider' || args[i] === '-p') {
@@ -31,6 +31,11 @@ function parseProvider() {
     }
   }
 
+  // Use config default if no CLI arg provided
+  if (!provider) {
+    provider = configDefault;
+  }
+
   const validProviders = ['claude', 'cursor'];
   if (!validProviders.includes(provider)) {
     console.error(`❌ Invalid provider: "${provider}". Must be one of: ${validProviders.join(', ')}`);
@@ -39,8 +44,6 @@ function parseProvider() {
 
   return provider;
 }
-
-const PROVIDER = parseProvider();
 
 function initializeBonzai() {
   const bonzaiPath = join(process.cwd(), BONZAI_DIR);
@@ -293,8 +296,8 @@ async function burn() {
     const config = loadConfig(configPath);
     const specs = loadSpecs(specsPath, config);
 
-    // Check if Claude CLI exists and execute
-    console.log('🔍 Checking for Claude Code CLI...');
+    // Determine provider: CLI arg overrides config
+    const provider = parseProvider(config.provider || 'claude');
 
     // Check if in git repo
     try {
@@ -336,8 +339,8 @@ async function burn() {
     exec(`git config bonzai.madeWipCommit ${madeWipCommit}`);
 
     console.log(`📋 Specs loaded from: ${BONZAI_DIR}/${SPECS_FILE}`);
-    console.log(`🤖 Provider: ${PROVIDER}`);
-    if (PROVIDER === 'claude') {
+    console.log(`🤖 Provider: ${provider}`);
+    if (provider === 'claude') {
       console.log(`⚙️  Headless mode: ${config.headlessClaude !== false ? 'on' : 'off'}`);
     }
     console.log('🔥 Running Bonzai burn...\n');
@@ -345,7 +348,7 @@ async function burn() {
     const startTime = Date.now();
 
     // Execute with the selected provider
-    if (PROVIDER === 'cursor') {
+    if (provider === 'cursor') {
       await executeCursor(specs, config);
     } else {
       await executeClaude(specs, config);
