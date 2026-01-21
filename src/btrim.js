@@ -12,8 +12,8 @@ const BONZAI_DIR = 'bonzai';
 const SPECS_FILE = 'specs.md';
 const CONFIG_FILE = 'config.json';
 
-// Template folder in the package
-const TEMPLATE_DIR = join(__dirname, '..', 'bonzai');
+// Template folder in the package (ships as payload-bonzai, copied as bonzai)
+const TEMPLATE_DIR = join(__dirname, '..', 'payload-bonzai');
 
 function initializeBonzai() {
   const bonzaiPath = join(process.cwd(), BONZAI_DIR);
