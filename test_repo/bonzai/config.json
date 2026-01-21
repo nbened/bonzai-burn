@@ -5,7 +5,7 @@
   "autoRun": false,
   "lineLimit": {
     "enabled": false,
-    "limit": 70,
+    "limit": 50,
     "prompt": "Split any file with over {{ linelimit }} lines into smaller files."
   },
   "folderLimit": {

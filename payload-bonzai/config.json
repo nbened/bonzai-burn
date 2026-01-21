@@ -2,7 +2,6 @@
   "provider": "cursor",
   "debugMode": true,
   "autoBurn": false,
-  "autoRun": false,
   "lineLimit": {
     "enabled": false,
     "limit": 70,
