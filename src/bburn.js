@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { runPostBurnHook, formatForClaude } from './hooks/post-burn.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -484,6 +485,20 @@ async function burn() {
 
     console.log(`\n✅ Changes applied on: ${burnBranch}`);
     console.log(`📊 Full diff: git diff ${originalBranch}`);
+
+    // Run post-burn hook ONLY if autoBurn is enabled in config
+    if (config.autoBurn === true) {
+      const analysisResults = await runPostBurnHook(config);
+
+      // Display analysis summary - informational only, Claude should NOT act on these
+      if (analysisResults && analysisResults.issues && analysisResults.issues.length > 0) {
+        console.log('\n' + '─'.repeat(50));
+        console.log('📊 POST-BURN ANALYSIS');
+        console.log('─'.repeat(50) + '\n');
+        console.log(formatForClaude(analysisResults));
+      }
+    }
+
     console.log(`\n✓ Keep changes: baccept`);
     console.log(`✗ Discard: brevert\n`);
 

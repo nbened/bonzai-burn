@@ -10,7 +10,8 @@
     "baccept": "./src/baccept.js",
     "brevert": "./src/brevert.js",
     "bgraph": "./src/bgraph.js",
-    "bonzai-mcp": "./src/mcp-server.js"
+    "bonzai-mcp": "./src/mcp-server.js",
+    "bonzai-config": "./src/commands/config.js"
   },
   "keywords": [
     "git",
