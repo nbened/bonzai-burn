@@ -1,14 +1,7 @@
-console.log(`[Terminal] Node version: ${process.version}`);
-console.log(`[Terminal] Platform: ${process.platform} ${process.arch}`);
-
 let pty;
 try {
   pty = require('node-pty');
-  console.log('[Terminal] node-pty loaded successfully');
 } catch (err) {
-  console.error('[Terminal] Failed to load node-pty:', err.message);
-  console.error('[Terminal] This usually means node-pty native binaries failed to install.');
-  console.error('[Terminal] Try running: cd bonzai && npm rebuild node-pty');
   pty = null;
 }
 
@@ -20,9 +13,7 @@ function getDefaultShell() {
   if (process.platform === 'win32') {
     return process.env.COMSPEC || 'powershell.exe';
   }
-  // Prefer SHELL env var, but always use full path
   const shell = process.env.SHELL || '/bin/bash';
-  // Ensure we have a full path
   if (!shell.startsWith('/')) {
     return '/bin/bash';
   }
@@ -38,10 +29,6 @@ function createTerminal(sessionId, cols = 80, rows = 24) {
   const shell = getDefaultShell();
   const cwd = process.env.HOME || process.cwd();
 
-  console.log(`[Terminal] Spawning shell: ${shell}`);
-  console.log(`[Terminal] Working directory: ${cwd}`);
-  console.log(`[Terminal] PATH: ${process.env.PATH}`);
-
   let ptyProcess;
   try {
     ptyProcess = pty.spawn(shell, [], {
@@ -56,11 +43,6 @@ function createTerminal(sessionId, cols = 80, rows = 24) {
       }
     });
   } catch (spawnErr) {
-    console.error('[Terminal] pty.spawn failed:', spawnErr);
-    console.error('[Terminal] Error code:', spawnErr.code);
-    console.error('[Terminal] Error errno:', spawnErr.errno);
-    // Try with /bin/bash as fallback
-    console.log('[Terminal] Retrying with /bin/bash...');
     try {
       ptyProcess = pty.spawn('/bin/bash', [], {
         name: 'xterm-256color',
@@ -74,8 +56,7 @@ function createTerminal(sessionId, cols = 80, rows = 24) {
         }
       });
     } catch (bashErr) {
-      console.error('[Terminal] /bin/bash also failed:', bashErr);
-      throw spawnErr; // throw original error
+      throw spawnErr;
     }
   }
 
@@ -110,9 +91,7 @@ function setupTerminalWebSocket(wss) {
 
     try {
       ptyProcess = createTerminal(sessionId);
-      console.log(`Terminal session ${sessionId} started`);
     } catch (err) {
-      console.error('Failed to create terminal:', err.message);
       ws.send(JSON.stringify({ type: 'error', message: 'Failed to create terminal: ' + err.message }));
       ws.close();
       return;
@@ -146,13 +125,12 @@ function setupTerminalWebSocket(wss) {
             break;
         }
       } catch (e) {
-        console.error('Terminal message error:', e);
+        // Parse error
       }
     });
 
     // Cleanup on disconnect
     ws.on('close', () => {
-      console.log(`Terminal session ${sessionId} closed`);
       ptyProcess.kill();
       terminals.delete(sessionId);
     });
