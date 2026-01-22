@@ -149,7 +149,11 @@ async function main() {
         // Start the server automatically
         const server = spawn('node', ['receiver.js'], {
           stdio: 'inherit',
-          cwd: bonzaiDir
+          cwd: bonzaiDir,
+          env: {
+            ...process.env,
+            BONZAI_REPO_DIR: currentDir
+          }
         });
 
         // Open browser automatically

@@ -1,0 +1,58 @@
+# Ignore patterns for file listing
+# Lines starting with # are comments
+# Use * for wildcards and ** for recursive patterns
+
+# Dependencies
+node_modules/
+package.json
+package-lock.json
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment and config files
+.env
+.env.local
+.env.production
+.env.staging
+
+# Version control
+.git/
+.gitignore
+.ignore
+
+# Logs
+*.log
+logs/
+
+# Build outputs
+dist/
+build/
+static/
+out/
+.next/
+*.min.js
+*.min.css
+*.bundle.js
+*.chunk.js
+
+# Temporary files
+*.tmp
+*.temp
+
+# Project-specific files
+receiver.js
+bonzai/
+
