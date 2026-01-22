@@ -12,7 +12,6 @@ function indexHandler(req, res) {
       'POST /write': 'Write file content (body: {path, content})',
       'GET /git/burns': 'List all bonzai-burn branches',
       'POST /git/checkout': 'Checkout a branch (body: {branchName})',
-      'POST /git/create-branch': 'Create and checkout a new branch (body: {name})',
       'WS /terminal': 'Interactive terminal via WebSocket'
     },
     example: 'Try: /list or /read?path=README.md'

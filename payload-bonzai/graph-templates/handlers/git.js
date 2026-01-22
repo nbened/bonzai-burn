@@ -69,34 +69,4 @@ function checkoutBranch(req, res) {
   }
 }
 
-// POST /git/create-branch - Create and checkout a new branch
-function createBranch(req, res) {
-  try {
-    const { name } = req.body;
-
-    if (!name) {
-      return res.status(400).json({ error: 'name is required' });
-    }
-
-    // Validate branch name to prevent command injection
-    if (!/^[a-zA-Z0-9_\-\.\/]+$/.test(name)) {
-      return res.status(400).json({ error: 'Invalid branch name' });
-    }
-
-    // Check if branch already exists
-    try {
-      execSync(`git rev-parse --verify ${name}`, { encoding: 'utf-8', stdio: 'pipe' });
-      return res.status(400).json({ error: `Branch '${name}' already exists` });
-    } catch (e) {
-      // Branch doesn't exist, which is what we want
-    }
-
-    execSync(`git checkout -b ${name}`, { encoding: 'utf-8' });
-
-    res.json({ created: name, checkedOut: name });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-module.exports = { listBurns, checkoutBranch, createBranch };
+module.exports = { listBurns, checkoutBranch };

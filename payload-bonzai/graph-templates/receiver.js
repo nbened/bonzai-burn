@@ -14,7 +14,7 @@ const openCursorHandler = require('./handlers/open-cursor');
 const shutdownHandler = require('./handlers/shutdown');
 const scanCodeQualityHandler = require('./handlers/scan_code_quality');
 const writeHandler = require('./handlers/write');
-const { listBurns, checkoutBranch, createBranch } = require('./handlers/git');
+const { listBurns, checkoutBranch } = require('./handlers/git');
 const { terminalHandler, setupTerminalWebSocket } = require('./handlers/terminal');
 
 const app = express();
@@ -38,7 +38,6 @@ app.post('/scan_code_quality', scanCodeQualityHandler);
 app.post('/write', writeHandler);
 app.get('/git/burns', listBurns);
 app.post('/git/checkout', checkoutBranch);
-app.post('/git/create-branch', createBranch);
 app.get('/terminal', terminalHandler);
 
 const port = 3001;
