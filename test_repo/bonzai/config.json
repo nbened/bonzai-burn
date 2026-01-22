@@ -2,10 +2,9 @@
   "provider": "cursor",
   "debugMode": true,
   "autoBurn": false,
-  "autoRun": false,
   "lineLimit": {
-    "enabled": true,
-    "limit": 50,
+    "enabled": false,
+    "limit": 70,
     "prompt": "Split any file with over {{ linelimit }} lines into smaller files."
   },
   "folderLimit": {
