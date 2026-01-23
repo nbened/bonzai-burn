@@ -157,19 +157,17 @@ async function main() {
   const command = args[0];
 
   switch (command) {
-    case 'install':
-      installHook();
-      break;
     case 'uninstall':
     case 'remove':
       uninstallHook();
       break;
     case 'status':
-    default:
       showStatus();
-      if (!command) {
-        console.log('Commands: bhook install | bhook uninstall | bhook status\n');
-      }
+      break;
+    case 'install':
+    default:
+      // Default action is to install (like bburn runs analysis by default)
+      installHook();
       break;
   }
 }
