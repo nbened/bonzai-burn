@@ -21,7 +21,7 @@ var init_loops_config = __esm({
     CHANNELS = {
       dev: ["burn", "visualization", "backend"],
       beta: ["burn", "visualization"],
-      stable: ["burn"]
+      stable: ["burn", "visualization"]
     };
     channel = "stable";
     ENABLED_LOOPS = CHANNELS[channel];

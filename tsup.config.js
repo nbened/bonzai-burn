@@ -1,6 +1,8 @@
 import { defineConfig } from 'tsup'
+import { CHANNELS } from './src/loops.config.js'
 
 const channel = process.env.RELEASE_CHANNEL || 'stable'
+const enabledLoops = CHANNELS[channel] || ['burn']
 
 export default defineConfig({
   entry: ['src/index.js'],
@@ -12,7 +14,7 @@ export default defineConfig({
   define: {
     'process.env.RELEASE_CHANNEL': JSON.stringify(channel)
   },
-  // Copy necessary files based on channel
+  // Copy necessary files based on enabled loops
   onSuccess: async () => {
     const fs = await import('fs')
     const path = await import('path')
@@ -28,8 +30,11 @@ export default defineConfig({
     // Copy payload-bonzai (config template)
     fs.cpSync('payload-bonzai', 'dist/payload-bonzai', { recursive: true })
 
-    // Only copy visualization/backend files for dev/beta
-    if (channel !== 'stable') {
+    // Check if any graph-template loops are enabled
+    const hasVisualization = enabledLoops.includes('visualization')
+    const hasBackend = enabledLoops.includes('backend')
+
+    if (hasVisualization || hasBackend) {
       fs.copyFileSync('src/bconfig.js', 'dist/bconfig.js')
 
       // Copy graph-templates base files
@@ -39,14 +44,13 @@ export default defineConfig({
       fs.copyFileSync('graph-templates/ignore.txt', 'dist/graph-templates/ignore.txt')
       fs.cpSync('graph-templates/utils', 'dist/graph-templates/utils', { recursive: true })
 
-      // Copy loops based on channel
       fs.mkdirSync('dist/graph-templates/loops', { recursive: true })
 
-      // visualization loop (beta and dev)
-      fs.cpSync('graph-templates/loops/visualization', 'dist/graph-templates/loops/visualization', { recursive: true })
+      if (hasVisualization) {
+        fs.cpSync('graph-templates/loops/visualization', 'dist/graph-templates/loops/visualization', { recursive: true })
+      }
 
-      // backend loop (dev only)
-      if (channel === 'dev') {
+      if (hasBackend) {
         fs.cpSync('graph-templates/loops/backend', 'dist/graph-templates/loops/backend', { recursive: true })
       }
     }
