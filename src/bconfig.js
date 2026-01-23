@@ -196,7 +196,7 @@ async function main() {
 export { main };
 
 // Run directly if called as standalone command
-const isDirectRun = process.argv[1]?.endsWith('bgraph.js');
+const isDirectRun = process.argv[1]?.endsWith('bconfig.js');
 if (isDirectRun) {
   main().catch(console.error);
 }

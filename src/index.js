@@ -18,7 +18,7 @@ Usage: npx bonzai-burn [option]
 Options:
   (no option)   Initialize bonzai in current directory
   -b, --burn    Run code analysis (bburn)
-  -g, --graph   Launch visualization server (bgraph)
+  -c, --config  Launch visualization server (bconfig)
   -h, --hook    Manage Claude Code stop hook (bhook)
   --help        Show this help message
 
@@ -31,7 +31,7 @@ Hook subcommands (-h):
 Examples:
   npx bonzai-burn          # Initialize bonzai folder
   npx bonzai-burn -b       # Run burn analysis
-  npx bonzai-burn -g       # Start graph server
+  npx bonzai-burn -c       # Start graph server
   npx bonzai-burn -h       # Install hook
   npx bonzai-burn -h -s    # Check hook status
 `);
@@ -54,7 +54,7 @@ function init() {
   console.log('');
   console.log('┌─────────────────────────────────────────────────────────────┐');
   console.log('│                                                             │');
-  console.log('│   🌳 Run `npx bonzai-burn -g` to visualize your codebase    │');
+  console.log('│   🌳 Run `npx bonzai-burn -c` to visualize your codebase    │');
   console.log('│                                                             │');
   console.log('└─────────────────────────────────────────────────────────────┘');
 }
@@ -70,10 +70,10 @@ async function main() {
       if (burnMain) await burnMain();
       break;
     }
-    case '-g':
-    case '--graph': {
-      const { main: graphMain } = await import('./bgraph.js');
-      if (graphMain) await graphMain();
+    case '-c':
+    case '--config': {
+      const { main: configMain } = await import('./bconfig.js');
+      if (configMain) await configMain();
       break;
     }
     case '-h':
