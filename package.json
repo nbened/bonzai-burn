@@ -3,12 +3,18 @@
   "version": "1.0.38",
   "description": "Git branch-based cleanup tool with bburn, baccept, and brevert commands",
   "type": "module",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "bin": {
-    "bonzai-burn": "./src/index.js",
-    "bburn": "./src/bburn.js",
-    "bconfig": "./src/bconfig.js",
-    "bhook": "./src/bhook.js"
+    "bonzai-burn": "./dist/index.js",
+    "bburn": "./dist/bburn.js",
+    "bhook": "./dist/bhook.js"
+  },
+  "scripts": {
+    "dev": "RELEASE_CHANNEL=dev node src/index.js",
+    "build": "RELEASE_CHANNEL=stable tsup",
+    "build:beta": "RELEASE_CHANNEL=beta tsup",
+    "build:dev": "RELEASE_CHANNEL=dev tsup",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "git",
@@ -20,14 +26,14 @@
     "node": ">=16.0.0"
   },
   "files": [
-    "src",
-    "payload-bonzai",
-    "graph-templates"
+    "dist"
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.25.3"
   },
   "devDependencies": {
-    "eslint": "^9.39.2"
+    "eslint": "^9.39.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   }
 }

@@ -1,6 +1,6 @@
 # bonzai-burn
 
-Automated code cleanup via Claude Code on a safe git branch.
+Code analysis CLI for Claude Code.
 
 ## Install
 
@@ -8,30 +8,20 @@ Automated code cleanup via Claude Code on a safe git branch.
 npx bonzai-burn
 ```
 
-Requires: [Claude Code CLI](https://github.com/anthropics/claude-code)
-
 ## Usage
 
-### 1. Run burn
-
 ```bash
-npx bburn
+npx bonzai-burn           # Initialize bonzai/ folder
+npx bonzai-burn -b        # Run code analysis
+npx bonzai-burn -h        # Install Claude Code hook
+npx bonzai-burn -h -s     # Check hook status
+npx bonzai-burn -h -u     # Uninstall hook
 ```
 
-Creates `bonzai/specs.md` on first run. Edit it to define your cleanup rules.
+## Config
 
-### 2. Review changes
+Edit `bonzai/config.json` to customize burn rules.
 
-```bash
-git diff main
-```
+---
 
-### 3. Accept or discard
-
-```bash
-# Accept
-baccept
-
-# Discard
-brevert
-```
+> **Note:** Release configuration (loops, channels) is managed outside this repo. See internal docs.

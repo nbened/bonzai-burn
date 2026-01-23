@@ -2,39 +2,29 @@
 import { existsSync, mkdirSync, copyFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { ENABLED_LOOPS } from './loops.config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const BONZAI_DIR = 'bonzai';
-const TEMPLATE_DIR = join(__dirname, '..', 'payload-bonzai');
+const TEMPLATE_DIR = join(__dirname, 'payload-bonzai');
 
 function showHelp() {
-  console.log(`
-🌳 Bonzai Burn - Code Analysis Tool
-
+  let help = `
 Usage: npx bonzai-burn [option]
 
 Options:
   (no option)   Initialize bonzai in current directory
-  -b, --burn    Run code analysis (bburn)
-  -c, --config  Launch visualization server (bconfig)
-  -h, --hook    Manage Claude Code stop hook (bhook)
-  --help        Show this help message
+  -b, --burn    Run code analysis
+  -h, --hook    Manage Claude Code stop hook
+  --help        Show this help message`;
 
-Hook subcommands (-h):
-  -h            Install hook (default)
-  -h -i         Install hook
-  -h -s         Show hook status
-  -h -u         Uninstall hook
+  if (ENABLED_LOOPS.includes('visualization') || ENABLED_LOOPS.includes('backend')) {
+    help = help.replace('--help', '-c, --config  Launch visualization server\n  --help');
+  }
 
-Examples:
-  npx bonzai-burn          # Initialize bonzai folder
-  npx bonzai-burn -b       # Run burn analysis
-  npx bonzai-burn -c       # Start graph server
-  npx bonzai-burn -h       # Install hook
-  npx bonzai-burn -h -s    # Check hook status
-`);
+  console.log(help);
 }
 
 function init() {
@@ -42,55 +32,48 @@ function init() {
   const bonzaiPath = join(currentDir, BONZAI_DIR);
 
   if (existsSync(bonzaiPath)) {
-    console.log(`📁 ${BONZAI_DIR}/ already exists`);
+    console.log(`${BONZAI_DIR}/ already exists`);
     return;
   }
 
   mkdirSync(bonzaiPath, { recursive: true });
   copyFileSync(join(TEMPLATE_DIR, 'config.json'), join(bonzaiPath, 'config.json'));
-  console.log(`📁 Created ${BONZAI_DIR}/ folder with config.json`);
-  console.log(`📝 Edit ${BONZAI_DIR}/config.json to configure your burn rules`);
-  console.log(`🔥 Run 'npx bonzai-burn -b' to analyze your codebase`);
-  console.log('');
-  console.log('┌─────────────────────────────────────────────────────────────────────┐');
-  console.log('│                                                                     │');
-  console.log('│   🌳 Run `npx bonzai-burn -c` to configure your cleanup settings    │');
-  console.log('│                                                                     │');
-  console.log('└─────────────────────────────────────────────────────────────────────┘');
+  console.log(`Created ${BONZAI_DIR}/ folder with config.json`);
+  console.log(`Edit ${BONZAI_DIR}/config.json to configure your burn rules`);
+  console.log(`Run 'npx bonzai-burn -b' to analyze your codebase`);
 }
 
 async function main() {
   const args = process.argv.slice(2);
   const flag = args[0];
 
-  switch (flag) {
-    case '-b':
-    case '--burn': {
+  // Burn loop
+  if (ENABLED_LOOPS.includes('burn')) {
+    if (flag === '-b' || flag === '--burn') {
       const { main: burnMain } = await import('./bburn.js');
-      if (burnMain) await burnMain();
-      break;
+      return burnMain?.();
     }
-    case '-c':
-    case '--config': {
-      const { main: configMain } = await import('./bconfig.js');
-      if (configMain) await configMain();
-      break;
-    }
-    case '-h':
-    case '--hook': {
+    if (flag === '-h' || flag === '--hook') {
       const { main: hookMain } = await import('./bhook.js');
-      // Pass remaining args as subcommands (e.g., -h -s → ['-s'])
-      const subArgs = args.slice(1);
-      if (hookMain) await hookMain(subArgs);
-      break;
+      return hookMain?.(args.slice(1));
     }
-    case '--help':
-      showHelp();
-      break;
-    default:
-      init();
-      break;
   }
+
+  // Visualization/Backend loop (server)
+  if (ENABLED_LOOPS.includes('visualization') || ENABLED_LOOPS.includes('backend')) {
+    if (flag === '-c' || flag === '--config') {
+      const { main: configMain } = await import('./bconfig.js');
+      return configMain?.();
+    }
+  }
+
+  if (flag === '--help') {
+    showHelp();
+    return;
+  }
+
+  // Default: init
+  init();
 }
 
 main().catch((error) => {
