@@ -1,18 +1,24 @@
 {
-  "provider": "claude",
-  "debugMode": true,
-  "autoBurn": false,
   "customChecks": {
     "requirements": "Remove unused imports and variables. Remove all console log statements."
   },
   "lineLimit": {
     "enabled": true,
-    "limit": 70,
+    "limit": 300,
     "prompt": "Split any file with over {{ linelimit }} lines into smaller files."
   },
   "folderLimit": {
     "enabled": true,
-    "limit": 10,
+    "limit": 15,
     "prompt": "Split any folder with over {{ folderlimit }} items into smaller, compartmentalized folders."
+  },
+  "testCheck": {
+    "enabled": false,
+    "patterns": {
+      ".vue": ".test.js",
+      ".jsx": ".test.jsx",
+      ".tsx": ".test.tsx"
+    },
+    "prompt": "Create test files for components that are missing them."
   }
 }
