@@ -53,7 +53,14 @@ async function main() {
   console.log('The above was found - let the user know but take no action. It\'s critical you take no action.\n');
 }
 
-main().catch((error) => {
-  console.error('Error:', error.message);
-  process.exit(1);
-});
+// Export for use via index.js flags
+export { main };
+
+// Run directly if called as standalone command
+const isDirectRun = process.argv[1]?.endsWith('bburn.js');
+if (isDirectRun) {
+  main().catch((error) => {
+    console.error('Error:', error.message);
+    process.exit(1);
+  });
+}

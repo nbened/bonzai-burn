@@ -172,7 +172,14 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  console.error('Error:', error.message);
-  process.exit(1);
-});
+// Export for use via index.js flags
+export { main };
+
+// Run directly if called as standalone command
+const isDirectRun = process.argv[1]?.endsWith('bhook.js');
+if (isDirectRun) {
+  main().catch((error) => {
+    console.error('Error:', error.message);
+    process.exit(1);
+  });
+}

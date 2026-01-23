@@ -192,4 +192,11 @@ async function main() {
   });
 }
 
-main().catch(console.error);
+// Export for use via index.js flags
+export { main };
+
+// Run directly if called as standalone command
+const isDirectRun = process.argv[1]?.endsWith('bgraph.js');
+if (isDirectRun) {
+  main().catch(console.error);
+}
