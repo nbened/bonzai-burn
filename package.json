@@ -1,6 +1,6 @@
 {
   "name": "bonzai-burn",
-  "version": "1.0.31",
+  "version": "1.0.32",
   "description": "Git branch-based cleanup tool with bburn, baccept, and brevert commands",
   "type": "module",
   "main": "src/index.js",
