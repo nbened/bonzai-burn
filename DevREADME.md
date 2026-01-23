@@ -2,7 +2,8 @@
 
 Users install with:     
 npm cache clean --force
-rm -rf bonzai                                                                                                                                               
+rm -rf bonzai                                     
+
 npx bonzai-burn@latest   # stable (default)                                                                                                               
 npx bonzai-burn@beta     # beta channel                                                                                                                   
 npx bonzai-burn@dev      # dev channel                                                                                                                    
@@ -13,7 +14,7 @@ Typical workflow:
 3. Promote to stable: npm run release    
 
 
-
+npx bonzai-burn@latest -b
 
 
 ## Test locally

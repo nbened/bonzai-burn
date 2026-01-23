@@ -493,7 +493,7 @@ async function main() {
   console.log("\u2500".repeat(50));
   console.log(`Found ${totalIssues} issues across ${results.filesScanned} files (${results.durationMs}ms)
 `);
-  console.log("The above was found - let the user know but take no action. It's critical you take no action.\n");
+  console.log("The following errors were found in your codebase. Please fix them before continuing.\n");
 }
 var BONZAI_DIR, CONFIG_FILE, _a, isDirectRun;
 var init_bburn = __esm({
