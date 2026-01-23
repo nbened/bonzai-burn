@@ -7,7 +7,8 @@
   "bin": {
     "bonzai-burn": "./src/index.js",
     "bburn": "./src/bburn.js",
-    "bgraph": "./src/bgraph.js"
+    "bgraph": "./src/bgraph.js",
+    "bhook": "./src/bhook.js"
   },
   "keywords": [
     "git",
