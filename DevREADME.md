@@ -7,18 +7,10 @@
 ## Test in another repo
 
 rm -rf bonzai/                                             
-npx bonzai-burn@latest
+npx bonzai-burn@latestds
 
 
-
-
-
-
-
-
-
-
-
+th
 
 
 ```bash
