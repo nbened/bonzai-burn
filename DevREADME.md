@@ -1,5 +1,9 @@
 # Dev Guide
 
+### Running (commonality)
+npm cache clean --force
+rm -rf bonzai    
+
 # Dev
 ### Pushing
 npm version patch
