@@ -11,8 +11,8 @@
   },
   "scripts": {
     "dev": "RELEASE_CHANNEL=dev node src/index.js",
-    "build": "RELEASE_CHANNEL=stable tsup",
-    "build:beta": "RELEASE_CHANNEL=beta tsup",
+    "build": "RELEASE_CHANNEL=prod tsup",
+    "build:beta": "RELEASE_CHANNEL=staging tsup",
     "build:dev": "RELEASE_CHANNEL=dev tsup",
     "prepublishOnly": "npm run build",
     "release": "npm version patch && npm publish",

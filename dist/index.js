@@ -23,8 +23,8 @@ var init_loops_config = __esm({
       staging: ["burn", "visualization"],
       prod: ["burn", "visualization"]
     };
-    channel = "stable";
-    ENABLED_LOOPS = CHANNELS[channel];
+    channel = "dev";
+    ENABLED_LOOPS = CHANNELS[channel] || CHANNELS.prod;
   }
 });
 function commandExists(cmd) {

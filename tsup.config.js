@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup'
 import { CHANNELS } from './src/loops.config.js'
 
-const channel = process.env.RELEASE_CHANNEL || 'stable'
+const channel = process.env.RELEASE_CHANNEL || 'prod'
 const enabledLoops = CHANNELS[channel] || ['burn']
 
 export default defineConfig({
