@@ -20,8 +20,8 @@ var init_loops_config = __esm({
   "src/loops.config.js"() {
     CHANNELS = {
       dev: ["burn", "visualization", "backend"],
-      beta: ["burn", "visualization"],
-      stable: ["burn", "visualization"]
+      staging: ["burn", "visualization"],
+      prod: ["burn", "visualization"]
     };
     channel = "stable";
     ENABLED_LOOPS = CHANNELS[channel];
