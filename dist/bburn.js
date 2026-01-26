@@ -47,15 +47,19 @@ async function main() {
     console.log('─'.repeat(50));
     console.log(`${totalIssues} issues across ${results.filesScanned} files (${results.durationMs}ms)\n`);
 
-    // Build prompt for Claude
-    const prompt = `The following tech debt was found in this codebase. Please fix these issues:\n\n${output}`;
+    // Build prompt for Claude - strip emojis for shell compatibility
+    const cleanOutput = output
+      .replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
+      .replace(/[─→]/g, '-')
+      .trim();
+
+    const prompt = `The following tech debt was found in this codebase. Please fix these issues:\n\n${cleanOutput}`;
 
     // Call Claude Code CLI
     console.log('🤖 Launching Claude Code to fix issues...\n');
 
     const claude = spawn('claude', ['-p', prompt], {
-      stdio: 'inherit',
-      shell: true
+      stdio: 'inherit'
     });
 
     claude.on('error', (err) => {
