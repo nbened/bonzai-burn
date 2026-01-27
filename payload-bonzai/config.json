@@ -2,9 +2,6 @@
   "customChecks": {
     "requirements": "Remove unused imports and variables. Remove all console log statements."
   },
-  "autoBurn":{
-    "enabled": true
-  },
   "eslint": {
     "enabled": true,
     "rules": ["no-unused-vars"]

@@ -16,8 +16,6 @@ Usage: npx bonzai-burn [option]
 
 Options:
   (no option)   Initialize bonzai in current directory
-  -b, --burn    Run code analysis
-  -h, --hook    Manage Claude Code stop hook
   --help        Show this help message`;
 
   if (ENABLED_LOOPS.includes('visualization') || ENABLED_LOOPS.includes('backend')) {
@@ -39,28 +37,15 @@ function init() {
   mkdirSync(bonzaiPath, { recursive: true });
   copyFileSync(join(TEMPLATE_DIR, 'config.json'), join(bonzaiPath, 'config.json'));
   console.log(`Created ${BONZAI_DIR}/ folder with config.json`);
-  console.log(`Edit ${BONZAI_DIR}/config.json to configure your burn rules`);
   console.log('');
   console.log('  ┌───────────────────────────────────────────────────────┐');
-  console.log('  │  npx bonzai-burn -g   Launch dependency graph        │');
+  console.log('  │  npx bonzai-burn -g   Launch visualization server    │');
   console.log('  └───────────────────────────────────────────────────────┘');
 }
 
 async function main() {
   const args = process.argv.slice(2);
   const flag = args[0];
-
-  // Burn loop
-  if (ENABLED_LOOPS.includes('burn')) {
-    if (flag === '-b' || flag === '--burn') {
-      const { main: burnMain } = await import('./bburn.js');
-      return burnMain?.();
-    }
-    if (flag === '-h' || flag === '--hook') {
-      const { main: hookMain } = await import('./bhook.js');
-      return hookMain?.(args.slice(1));
-    }
-  }
 
   // Visualization/Backend loop (server)
   if (ENABLED_LOOPS.includes('visualization') || ENABLED_LOOPS.includes('backend')) {

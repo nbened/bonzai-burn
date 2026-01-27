@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup'
 import { CHANNELS } from './src/loops.config.js'
 
 const channel = process.env.RELEASE_CHANNEL || 'prod'
-const enabledLoops = CHANNELS[channel] || ['burn']
+const enabledLoops = CHANNELS[channel] || ['visualization', 'backend']
 
 export default defineConfig({
   entry: ['src/index.js'],
@@ -18,14 +18,6 @@ export default defineConfig({
   onSuccess: async () => {
     const fs = await import('fs')
     const path = await import('path')
-
-    // Always copy burn loop files
-    const burnFiles = ['src/bburn.js', 'src/bhook.js', 'src/analyzer.js']
-    for (const file of burnFiles) {
-      if (fs.existsSync(file)) {
-        fs.copyFileSync(file, path.join('dist', path.basename(file)))
-      }
-    }
 
     // Copy payload-bonzai (config template)
     fs.cpSync('payload-bonzai', 'dist/payload-bonzai', { recursive: true })

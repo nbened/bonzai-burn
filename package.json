@@ -1,13 +1,11 @@
 {
   "name": "bonzai-burn",
   "version": "1.0.85",
-  "description": "Git branch-based cleanup tool with bburn, baccept, and brevert commands",
+  "description": "Visualization and file management tools for codebases",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "bonzai-burn": "./dist/index.js",
-    "bburn": "./dist/bburn.js",
-    "bhook": "./dist/bhook.js"
+    "bonzai-burn": "./dist/index.js"
   },
   "scripts": {
     "dev": "RELEASE_CHANNEL=dev node src/index.js",
@@ -20,8 +18,8 @@
     "release:dev": "npm run build:dev && npm publish --tag dev --ignore-scripts"
   },
   "keywords": [
-    "git",
-    "cleanup",
+    "visualization",
+    "codebase",
     "cli"
   ],
   "license": "MIT",

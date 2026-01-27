@@ -39,20 +39,13 @@ if (readHandler) app.get('/read', readHandler);
 
 // Backend loop handlers
 const deleteHandler = tryLoad('delete');
-const openCursorHandler = tryLoad('open-cursor');
 const writeHandler = tryLoad('write');
 const shutdownHandler = tryLoad('shutdown');
-const gitHandlers = tryLoad('git');
 const terminalHandlers = tryLoad('terminal');
 
 if (deleteHandler) app.post('/delete', deleteHandler);
-if (openCursorHandler) app.post('/open-cursor', openCursorHandler);
 if (writeHandler) app.post('/write', writeHandler);
 if (shutdownHandler) app.post('/shutdown', shutdownHandler);
-if (gitHandlers) {
-  app.get('/git/burns', gitHandlers.listBurns);
-  app.post('/git/checkout', gitHandlers.checkoutBranch);
-}
 if (terminalHandlers) {
   const { WebSocketServer } = require('./node_modules/ws');
   const wss = new WebSocketServer({ server, path: '/terminal' });
