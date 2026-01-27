@@ -1,3 +1,5 @@
+const { ROOT } = require('../config');
+
 let pty;
 try {
   pty = require('node-pty');
@@ -27,7 +29,7 @@ function createTerminal(sessionId, cols = 80, rows = 24) {
   }
 
   const shell = getDefaultShell();
-  const cwd = process.env.BONZAI_REPO_DIR || process.cwd();
+  const cwd = ROOT;
 
   let ptyProcess;
   try {

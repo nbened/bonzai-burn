@@ -5,6 +5,7 @@ const cors = require('./node_modules/cors');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { ROOT } = require('./config');
 
 const app = express();
 const server = http.createServer(app);
@@ -14,7 +15,7 @@ app.use(express.json());
 
 // Root route
 app.get('/', (req, res) => {
-  const repoName = path.basename(process.env.BONZAI_REPO_DIR || process.cwd());
+  const repoName = path.basename(ROOT);
   res.json({ message: 'Bonzai Server', status: 'running', repoName });
 });
 
