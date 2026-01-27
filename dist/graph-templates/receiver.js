@@ -63,5 +63,4 @@ if (terminalHandlers) {
 const port = 3001;
 server.listen(port, () => {
   console.log('File server running on http://localhost:' + port);
-  console.log('ROOT directory:', ROOT);
 });

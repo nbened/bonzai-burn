@@ -6,9 +6,6 @@ function openCursorHandler(req, res) {
   try {
     const requestedPath = req.body.path || '';
 
-    console.log('[open-cursor] ROOT:', ROOT);
-    console.log('[open-cursor] requestedPath:', requestedPath);
-
     // Resolve path relative to ROOT (similar to other endpoints)
     // If path is absolute and within ROOT, use it directly
     // Otherwise, resolve it relative to ROOT
@@ -47,8 +44,6 @@ function openCursorHandler(req, res) {
     if (!filePath.startsWith(ROOT)) {
       return res.status(400).json({ error: 'Invalid path' });
     }
-
-    console.log('[open-cursor] resolved filePath:', filePath);
 
     const { line } = req.body;
     
@@ -98,7 +93,7 @@ function openCursorHandler(req, res) {
           }, 500);
         }
         
-        res.json({ success: true, message: 'Cursor opened and focused successfully', openedPath: filePath });
+        res.json({ success: true, message: 'Cursor opened and focused successfully' });
       }
     });
   };
