@@ -1,6 +1,6 @@
 {
   "name": "bonzai-burn",
-  "version": "1.0.85",
+  "version": "1.0.86",
   "description": "Visualization and file management tools for codebases",
   "type": "module",
   "main": "dist/index.js",
