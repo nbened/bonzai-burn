@@ -1,7 +1,13 @@
+const path = require('path');
+const { ROOT } = require('../config');
+
 // Root route - simple API documentation
 function indexHandler(req, res) {
+  const repoName = path.basename(ROOT);
   res.json({
-    message: 'Local File Server API',
+    message: 'Bonzai Server',
+    status: 'running',
+    repoName,
     endpoints: {
       'GET /list': 'List all files in the directory',
       'GET /read?path=<filepath>': 'Read file content',
