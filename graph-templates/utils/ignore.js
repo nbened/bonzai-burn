@@ -37,7 +37,6 @@ function getIgnorePatterns() {
     /^\.git(\/.*)?$/,
     /^\.DS_Store$/,
     /^\.env$/,
-    /^bonzai(\/.*)?$/
   ];
 }
 

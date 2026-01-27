@@ -22,4 +22,4 @@ npx bonzai-burn@staging
 npm version patch
 npm publish 
 ### Running
-npx bonzai-burn 
+npx bonzai-burn@latest
