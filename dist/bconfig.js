@@ -165,7 +165,7 @@ async function main() {
         console.log('All code stays on your machine\n');
         console.log('Relay server running on localhost:3001');
         console.log('Terminal WebSocket available at ws://localhost:3001/terminal');
-        console.log('Diagram available at https://bonzai.dev/\n');
+        console.log('Diagram available at https://bonzai.dev/visualize\n');
 
         // Start the server automatically
         const server = spawn('node', ['receiver.js'], {
@@ -178,7 +178,7 @@ async function main() {
         });
 
         // Open browser automatically
-        exec('open https://bonzai.dev/');
+        exec('open https://bonzai.dev/visualize');
 
         // Handle server process
         server.on('close', (serverCode) => {
