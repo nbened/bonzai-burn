@@ -4,7 +4,9 @@ const { listAllFiles } = require('../utils/fileList');
 
 function listHandler(req, res) {
   try {
-    const files = listAllFiles(ROOT);
+    const relativeFiles = listAllFiles(ROOT);
+    // Prefix all paths with ROOT to make them absolute
+    const files = relativeFiles.map(f => path.join(ROOT, f));
     res.json({ files });
   } catch (e) {
     res.status(500).send(e.message);
