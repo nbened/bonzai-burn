@@ -1,2 +1,6 @@
-DevREADME.md
+# Source files (dist/ is published via "files" in package.json)
+graph-templates/
+src/
 test_repo/
+tsup.config.js
+DevREADME.md
