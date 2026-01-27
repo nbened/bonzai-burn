@@ -870,9 +870,10 @@ function init() {
   console.log(`Created ${BONZAI_DIR3}/ folder with config.json`);
   console.log(`Edit ${BONZAI_DIR3}/config.json to configure your burn rules`);
   console.log("");
-  console.log(" --------------------------------------------------------");
-  console.log("|  Run npx bonzai-burn -b to find tech debt in codebase  |");
-  console.log(" --------------------------------------------------------");
+  console.log("  \u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510");
+  console.log("  \u2502  npx bonzai-burn -c   Configure burn rules              \u2502");
+  console.log("  \u2502  npx bonzai-burn -b   Find tech debt in codebase        \u2502");
+  console.log("  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518");
 }
 async function main4() {
   const args = process.argv.slice(2);
