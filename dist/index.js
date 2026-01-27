@@ -496,7 +496,7 @@ async function main() {
 `);
     try {
       execSync("pbcopy", { input: output });
-      console.log('Issues copied to clipboard - prompt claude to fix\n');
+      console.log('Issues copied to clipboard. Run "claude" to implement.\n');
     } catch {
       console.log("Copy the above and give to Claude.\n");
     }

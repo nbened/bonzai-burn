@@ -50,7 +50,7 @@ async function main() {
     // Copy to clipboard
     try {
       execSync('pbcopy', { input: output });
-      console.log('Issues copied to clipboard - prompt Claude Code to implement.\n');
+      console.log('Issues copied to clipboard. Run "claude" to implement.\n');
     } catch {
       console.log('Copy the above and give to Claude.\n');
     }
