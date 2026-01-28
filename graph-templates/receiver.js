@@ -7,14 +7,40 @@ const fs = require('fs');
 const path = require('path');
 const { ROOT } = require('./config');
 
+const port = 3001;
 const app = express();
 const server = http.createServer(app);
 
 app.use(cors());
 app.use(express.json());
 
-// Root route
+// Embed shell - serves HTML that loads app from CDN
 app.get('/', (req, res) => {
+  const repoName = path.basename(ROOT);
+  res.send(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bonzai - ${repoName}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body, #root { height: 100%; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    window.BONZAI_REPO = "${repoName}";
+    window.BONZAI_API = "http://localhost:${port}";
+  </script>
+  <script src="https://bonzai.dev/app.js"></script>
+</body>
+</html>`);
+});
+
+// Health check
+app.get('/health', (req, res) => {
   const repoName = path.basename(ROOT);
   res.json({ message: 'Bonzai Server', status: 'running', repoName });
 });
@@ -53,7 +79,6 @@ if (terminalHandlers) {
   app.get('/terminal', terminalHandlers.terminalHandler);
 }
 
-const port = 3001;
 server.listen(port, () => {
   console.log('File server running on http://localhost:' + port);
 });
