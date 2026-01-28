@@ -12,14 +12,14 @@ const TEMPLATE_DIR = join(__dirname, 'payload-bonzai');
 
 function showHelp() {
   let help = `
-Usage: npx bonzai-tools [option]
+Usage: npx bonzai-tree [option]
 
 Options:
   (no option)   Initialize bonzai in current directory
   --help        Show this help message`;
 
   if (ENABLED_LOOPS.includes('visualization') || ENABLED_LOOPS.includes('backend')) {
-    help = help.replace('--help', '-g, --graph   Launch visualization server\n  --help');
+    help = help.replace('--help', '-v, --visualize   Launch visualization server\n  --help');
   }
 
   console.log(help);
@@ -38,9 +38,9 @@ function init() {
   copyFileSync(join(TEMPLATE_DIR, 'config.json'), join(bonzaiPath, 'config.json'));
   console.log(`Created ${BONZAI_DIR}/ folder with config.json`);
   console.log('');
-  console.log('  ┌───────────────────────────────────────────────────────┐');
-  console.log('  │  npx bonzai-tools -g   Launch visualization server   │');
-  console.log('  └───────────────────────────────────────────────────────┘');
+  console.log('  ┌──────────────────────────────────────────────────────┐');
+  console.log('  │  npx bonzai-tree -v   Launch visualization server   │');
+  console.log('  └──────────────────────────────────────────────────────┘');
 }
 
 async function main() {
@@ -49,7 +49,7 @@ async function main() {
 
   // Visualization/Backend loop (server)
   if (ENABLED_LOOPS.includes('visualization') || ENABLED_LOOPS.includes('backend')) {
-    if (flag === '-g' || flag === '--graph') {
+    if (flag === '-v' || flag === '--visualize') {
       const { main: configMain } = await import('./bconfig.js');
       return configMain?.();
     }
