@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const { ROOT } = require('./config');
 
-const port = 3001;
+const port = 6767;
 const app = express();
 const server = http.createServer(app);
 
