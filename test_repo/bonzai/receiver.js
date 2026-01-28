@@ -14,34 +14,16 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(express.json());
 
-// Serve static build files
-const buildDir = path.join(__dirname, 'build');
-app.use('/static', express.static(path.join(buildDir, 'static')));
-
-// Embed shell - serves HTML that loads bundled app
+// Embed shell - loads app from CDN
 app.get('/', (req, res) => {
   const repoName = path.basename(ROOT);
-
-  // Read asset manifest to get hashed filenames
-  const manifestPath = path.join(buildDir, 'asset-manifest.json');
-  let cssFile = '';
-  let jsFile = '';
-
-  try {
-    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-    cssFile = manifest.files['main.css'] || '';
-    jsFile = manifest.files['main.js'] || '';
-  } catch (e) {
-    console.error('Could not read asset-manifest.json:', e.message);
-  }
-
   res.send(`<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bonzai - ${repoName}</title>
-  ${cssFile ? `<link rel="stylesheet" href="${cssFile}">` : ''}
+  <link rel="stylesheet" href="https://bonzai.dev/app.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body, #root { height: 100%; }
@@ -53,7 +35,7 @@ app.get('/', (req, res) => {
     window.BONZAI_REPO = "${repoName}";
     window.BONZAI_API = "http://localhost:${port}";
   </script>
-  ${jsFile ? `<script src="${jsFile}"></script>` : '<p>Build not found. Run npm run build in the frontend.</p>'}
+  <script src="https://bonzai.dev/app.js"></script>
 </body>
 </html>`);
 });
