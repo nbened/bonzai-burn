@@ -178,7 +178,7 @@ async function main() {
         });
 
         // Open browser automatically
-        exec('open https://bonzai.dev/visualize');
+        exec('open https://bonzai.dev/visualize?ref=btools');
 
         // Handle server process
         server.on('close', (serverCode) => {
