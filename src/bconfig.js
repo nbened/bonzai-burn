@@ -87,6 +87,14 @@ async function main() {
   const utilsDest = path.join(bonzaiDir, 'utils');
   copyDirectory(utilsSrc, utilsDest);
 
+  // Copy frontend build
+  const buildSrc = path.join(TEMPLATE_DIR, 'build');
+  if (fs.existsSync(buildSrc)) {
+    console.log('Copying frontend build...');
+    const buildDest = path.join(bonzaiDir, 'build');
+    copyDirectory(buildSrc, buildDest);
+  }
+
   // Write .ignore file in bonzai directory
   const ignoreTargetPath = path.join(bonzaiDir, '.ignore');
   if (!fs.existsSync(ignoreTargetPath)) {
@@ -165,7 +173,7 @@ async function main() {
         console.log('All code stays on your machine\n');
         console.log('Relay server running on localhost:3001');
         console.log('Terminal WebSocket available at ws://localhost:3001/terminal');
-        console.log('Diagram available at https://bonzai.dev/visualize\n');
+        console.log('App available at http://localhost:3001\n');
 
         // Start the server automatically
         const server = spawn('node', ['receiver.js'], {
@@ -178,7 +186,7 @@ async function main() {
         });
 
         // Open browser automatically
-        exec('open https://bonzai.dev/visualize?ref=btools');
+        exec('open http://localhost:3001');
 
         // Handle server process
         server.on('close', (serverCode) => {
