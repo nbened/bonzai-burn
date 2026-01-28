@@ -1,6 +1,6 @@
 {
   "name": "bonzai-tools",
-  "version": "1.0.91",
+  "version": "1.0.92",
   "description": "Visualization and file management tools for codebases",
   "type": "module",
   "main": "dist/index.js",
