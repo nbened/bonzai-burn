@@ -75,7 +75,7 @@ function terminalHandler(req, res) {
   res.json({
     message: 'Terminal WebSocket API',
     usage: {
-      websocket: 'ws://localhost:3001/terminal',
+      websocket: 'ws://localhost:6767/terminal',
       events: {
         'input': 'Send terminal input (data: string)',
         'resize': 'Resize terminal (cols: number, rows: number)',
